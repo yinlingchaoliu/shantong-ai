@@ -1,0 +1,3 @@
+
+# pip notebook
+jupyter notebook
