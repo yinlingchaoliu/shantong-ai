@@ -4,10 +4,10 @@ import os
 # 下载数据集
 url = "https://storage.googleapis.com/tensorflow/tf-keras-datasets/mnist.npz"
 response = requests.get(url)
-open("mnist.npz", "wb").write(response.content)
+open("data/mnist/mnist.npz", "wb").write(response.content)
 
 # 解压数据集
-with open("mnist.npz", "rb") as f:
+with open("data/mnist/mnist.npz", "rb") as f:
     import numpy as np
 
     data = np.load(f)

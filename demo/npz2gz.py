@@ -5,7 +5,7 @@ import gzip
 from sklearn.model_selection import train_test_split
 
 # 加载 MNIST .npz 文件
-mnist_npz = np.load('mnist.npz')
+mnist_npz = np.load('data/mnist/mnist.npz')
 
 # 提取训练集、验证集和测试集的数据和标签
 x_train = mnist_npz['x_train']
@@ -34,5 +34,5 @@ data = (
 )
 
 # 保存为 .pkl.gz  文件
-with gzip.open('mnist.pkl.gz', 'wb') as f:
+with gzip.open('data/mnist/mnist.pkl.gz', 'wb') as f:
     pickle.dump(data, f)

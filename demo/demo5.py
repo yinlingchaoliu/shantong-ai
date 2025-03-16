@@ -16,7 +16,7 @@ from sympy.physics.units import years
 warnings.filterwarnings("ignore")
 print(os.getcwd())
 os.chdir(os.getcwd())
-features = pd.read_csv('temps.csv')
+features = pd.read_csv('data/temps.csv')
 
 # 打印展示数据表
 print(features.head())
