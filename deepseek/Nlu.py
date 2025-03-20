@@ -174,3 +174,10 @@ if __name__ == '__main__':
     response = dm.run("这流量包太贵了")
     print("===response===")
     print(response)
+
+
+"""
+思维链 
+
+思维树
+"""

@@ -31,8 +31,10 @@ class DeepSeekChat(IChat):
         except openai.error.APIError as e:
             print(f"API错误: {e}")
 
-    def get_completion(self, prompt, model="deepseek-chat"):
+    def get_completion(self, prompt, model="deepseek-chat",debug=False):
         try:
+            if debug:
+                print("prompt:", prompt)
             response = openai.ChatCompletion.create(
                 model=model,
                 messages=[{"role": "user", "content": prompt}],
@@ -40,7 +42,10 @@ class DeepSeekChat(IChat):
                 max_tokens=512,  # 控制生成文本的最大长度
             )
             # DeepSeek的响应结构与OpenAI存在差异，需要特殊处理
-            return response.choices[0].message.content.strip()
+            resp = response.choices[0].message.content.strip()
+            if debug:
+                print("模型回复：", resp)
+            return resp
         except openai.error.APIError as e:
             if "Insufficient Balance" in str(e):
                 # 发送邮件/短信通知
@@ -51,8 +56,10 @@ class DeepSeekChat(IChat):
             print(f"发生未知错误: {e}")
             return ""
 
-    def get_completion_messages(self, messages, model="deepseek-chat"):
+    def get_completion_messages(self, messages, model="deepseek-chat",debug=False):
         try:
+            if debug:
+                print("prompt:", messages)
             response = openai.ChatCompletion.create(
                 model=model,
                 messages=messages,
@@ -60,7 +67,10 @@ class DeepSeekChat(IChat):
                 max_tokens=512,  # 控制生成文本的最大长度
             )
             # DeepSeek的响应结构与OpenAI存在差异，需要特殊处理
-            return response.choices[0].message.content.strip()
+            resp = response.choices[0].message.content.strip()
+            if debug:
+                print("模型回复：", resp)
+            return resp
         except openai.error.APIError as e:
             if "Insufficient Balance" in str(e):
                 # 发送邮件/短信通知
