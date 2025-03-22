@@ -156,5 +156,6 @@ class calcDeepSeek():
 
 if __name__ == '__main__':
     calc = calcDeepSeek()
-    calc.calc("请计算: 1+2*3-4/5")
+    # calc.calc("请计算: 1+2*3-4/5")
+    calc.calc("请计算: 6 * 3 / (4+2) = ?")
     pass
