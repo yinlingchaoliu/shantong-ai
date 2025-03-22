@@ -1,0 +1,18 @@
+{
+  "schema_version": "v1",
+  "name_for_human": "天气查询助手",
+  "name_for_model": "WeatherPlugin",
+  "description_for_human": "实时查询全球城市天气信息",
+  "description_for_model": "当用户需要查询天气时调用此插件，可获取指定城市的实时温度、天气状况等信息",
+  "auth": {
+    "type": "none"
+  },
+  "api": {
+    "type": "openapi",
+    "url": "https://your-domain.com/openapi.yaml",
+    "is_user_authenticated": false
+  },
+  "logo_url": "https://your-domain.com/logo.png",
+  "contact_email": "support@your-domain.com",
+  "legal_info_url": "https://your-domain.com/legal"
+}

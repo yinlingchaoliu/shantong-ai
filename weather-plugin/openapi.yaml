@@ -1,0 +1,52 @@
+openapi: 3.0.1
+info:
+  title: 天气插件
+  description: 获取实时天气数据
+  version: 1.0.0
+servers:
+  - url: https://api.your-domain.com
+paths:
+  /weather/today:
+    get:
+      operationId: getTodayWeather
+      summary: 获取今日天气
+      parameters:
+        - name: city
+          in: query
+          description: 城市名称
+          required: true
+          schema:
+            type: string
+          example: 北京
+      responses:
+        '200':
+          description: 成功返回天气数据
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WeatherResponse'
+components:
+  schemas:
+    WeatherResponse:
+      type: object
+      properties:
+        city:
+          type: string
+          description: 城市名称
+        temperature:
+          type: number
+          format: float
+          description: 当前温度（摄氏度）
+        condition:
+          type: string
+          description: 天气状况
+          enum: [晴, 多云, 阴, 雨, 雪]
+        humidity:
+          type: integer
+          description: 湿度百分比
+          minimum: 0
+          maximum: 100
+      required:
+        - city
+        - temperature
+        - condition
