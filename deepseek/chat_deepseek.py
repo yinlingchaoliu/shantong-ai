@@ -1,3 +1,4 @@
+import json
 from abc import ABC
 
 import openai
@@ -59,7 +60,8 @@ class DeepSeekChat(IChat):
     def get_completion_messages(self, messages, model="deepseek-chat",debug=False):
         try:
             if debug:
-                print("prompt:", messages)
+                formatted_json = json.dumps(messages, indent=4, ensure_ascii=False)
+                print("prompt:", formatted_json)
             response = openai.ChatCompletion.create(
                 model=model,
                 messages=messages,

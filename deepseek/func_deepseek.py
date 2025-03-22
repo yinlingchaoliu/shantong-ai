@@ -1,3 +1,5 @@
+import json
+
 import openai
 import os
 from dotenv import load_dotenv, find_dotenv
@@ -44,8 +46,8 @@ class DeepSeekFunc(IChat):
             # tool_call = response['choices'][0]['message']['tool_calls'][0]
             # resp = tool_call['function']['arguments'].strip()
             resp = response.choices[0].message
-            print(response)
             if debug:
+                print(response)
                 print("模型回复：", resp)
             return resp
         except openai.error.APIError as e:
@@ -61,7 +63,8 @@ class DeepSeekFunc(IChat):
     def get_completion_messages(self, messages, model="deepseek-chat", tools=[], debug=False):
         try:
             if debug:
-                print("prompt:", messages)
+                formatted_json = json.dumps(messages, indent=4, ensure_ascii=False)
+                print("prompt:", formatted_json)
             response = openai.ChatCompletion.create(
                 model=model,
                 messages=messages,
@@ -72,9 +75,10 @@ class DeepSeekFunc(IChat):
             resp = response.choices[0].message
             # tool_call = response['choices'][0]['message']['tool_calls'][0]
             # resp = tool_call['function']['arguments'].strip()
-            print(response)
+
             if debug:
                 print("模型回复：", resp)
+                print(response)
             return resp
         except openai.error.APIError as e:
             if "Insufficient Balance" in str(e):
