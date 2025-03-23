@@ -88,14 +88,6 @@ class AddContactFunc():
     def _deepseek_func(self, debug=True):
         return self.deepfunc.get_completion_messages(self.messages, tools=self.tools, debug=debug)
 
-    """
-        请求第三方api, 获得真实数据
-        此处查询数据库
-    """
-
-    def _get_api(self, **arguments):
-        return {}
-
     def _validate_params(self, params: dict):
         allowed_departments = ['技术部', '市场部', '财务部']
         if 'department' in params and params['department'] not in allowed_departments:
@@ -108,13 +100,13 @@ class AddContactFunc():
     """
 
     def _deepseek_func_warp(self, tool_call, new_data, debug=True):
-        function_args = tool_call['function']['arguments']
+        function_args = tool_call.function.arguments
         self.messages.append(
             {
                 "role": "assistant",
                 "content": None,
                 "tool_calls": [{
-                    "id": tool_call['id'],
+                    "id": tool_call.id,
                     "type": "function",
                     "function": {
                         "name": "query_employees",
@@ -128,7 +120,7 @@ class AddContactFunc():
             {
                 "role": "tool",
                 "content": json.dumps(new_data),
-                "tool_call_id": tool_call['id']
+                "tool_call_id": tool_call.id
             }
         )
 

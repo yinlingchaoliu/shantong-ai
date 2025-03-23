@@ -97,13 +97,13 @@ class WeatherFunc():
     组装数据 让deepseek 重新回答
     """
     def _deepseek_func_warp(self, tool_call, new_data, debug=True):
-        function_args = tool_call['function']['arguments']
+        function_args = tool_call.function.arguments
         self.messages.append(
             {
                 "role": "assistant",
                 "content": None,
                 "tool_calls": [{
-                    "id": tool_call['id'],
+                    "id": tool_call.id,
                     "type": "function",
                     "function": {
                         "name": "get_current_weather",
@@ -117,7 +117,7 @@ class WeatherFunc():
             {
                 "role": "tool",
                 "content": json.dumps(new_data),
-                "tool_call_id": tool_call['id']
+                "tool_call_id": tool_call.id
             }
         )
 

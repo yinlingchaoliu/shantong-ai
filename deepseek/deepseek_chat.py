@@ -16,10 +16,10 @@ class DeepSeekChat(IChat):
         self._deepseek.check_api_key()
 
     def get_completion(self, prompt, model="deepseek-chat",debug=False):
-        self._deepseek.get_completion(prompt, model=model,debug=debug)
+        return self._deepseek.get_completion(prompt, model=model,debug=debug)
 
     def get_completion_messages(self, messages, model="deepseek-chat",debug=False):
-        self._deepseek.get_completion_messages(messages, model=model,debug=debug)
+        return self._deepseek.get_completion_messages(messages, model=model,debug=debug)
 
     def moderation(self, text,debug=False):
         self._deepseek.moderation(text, debug=debug)

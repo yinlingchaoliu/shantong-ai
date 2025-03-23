@@ -122,21 +122,21 @@ class calcDeepSeek():
                 .case("divide", lambda: args["a"] / args["b"])
                 .default({"Unknown function"}))
                 print(result)
-                self._deepseek_func_warp(tool_call, result, debug=True)
+                self._deepseek_func_warp(tool_call, result)
                 # self.messages.append({"role": "function", "name": function_name, "content": str(result)})
             self.deepchat.get_completion_messages(self.messages, debug=debug)
 
     """
     组装数据 让deepseek 重新回答
     """
-    def _deepseek_func_warp(self, tool_call, new_data, debug=True):
-        function_args = tool_call['function']['arguments']
+    def _deepseek_func_warp(self, tool_call, new_data):
+        function_args = tool_call.function.arguments
         self.messages.append(
             {
                 "role": "assistant",
                 "content": None,
                 "tool_calls": [{
-                    "id": tool_call['id'],
+                    "id": tool_call.id,
                     "type": "function",
                     "function": {
                         "name": "get_current_weather",
@@ -149,7 +149,7 @@ class calcDeepSeek():
             {
                 "role": "tool",
                 "content": json.dumps(new_data),
-                "tool_call_id": tool_call['id']
+                "tool_call_id": tool_call.id
             }
         )
 

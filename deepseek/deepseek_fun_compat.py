@@ -4,55 +4,32 @@ from typing import Union
 import openai
 import os
 from dotenv import load_dotenv, find_dotenv
-from openai import AuthenticationError, OpenAI
+from openai import AuthenticationError , OpenAI
 
 from IChat import IChat
-from nlu_deepseek import *
 
-from importlib.metadata  import version
+from importlib.metadata import version
+
 openai_version = version("openai")
-#版本导入兼容
+# 版本导入兼容
 if openai_version >= "1.0.0":
     from openai import APIError
 else:
     from openai.error import APIError
 
-"""
-deepseek兼容版本
-"""
-class DeepSeekChatCompat(IChat):
+
+class DeepSeekFuncCompat(IChat):
+
     # 初始化DeepSeekChat类
     def __init__(self):
         self._model_name = "deepseek-chat"
+        self._openai_api_base = "https://api.deepseek.com/v1"
         self._openai_api_beta = "https://api.deepseek.com/beta"
         self._openai_api_key = None
         self.init_api_key()
         # 初始化OpenAI客户端 根据openai版本
-        self.client = self._get_openai_client()
+        self.client:OpenAI = self._get_openai_client()
         self.check_api_key()
-
-    """
-    根据 OpenAI SDK 版本返回兼容的客户端对象
-    :param api_key: API密钥
-    :param base_url: 自定义API端点（用于国内代理或私有化部署）
-    :return: 客户端对象或旧版全局配置
-    """
-
-    def _get_openai_client(self, api_key: str = None, base_url: str = None) -> Union[OpenAI, None]:
-        openai_version = version("openai")
-        # 新版 SDK (≥1.0.0)
-        if tuple(map(int, openai_version.split('.')[:2])) >= (1, 0):
-            from openai import OpenAI
-            return OpenAI(
-                api_key=api_key or self._openai_api_key,
-                base_url=base_url or self._openai_api_beta,
-                timeout=30.0
-            )
-        # 旧版 SDK (<1.0.0)
-        else:
-            openai.api_key = api_key or self._openai_api_key
-            openai.api_base = base_url or self._openai_api_beta
-            return None  # 旧版无需返回客户端实例
 
     def init_api_key(self):
         # 加载环境变量
@@ -74,19 +51,19 @@ class DeepSeekChatCompat(IChat):
         except Exception as e:
             self._handle_openai_error(e)
 
-    def get_completion(self, prompt, model="deepseek-chat", debug=False):
+    def get_completion(self, prompt, model="deepseek-chat", tools=[], debug=False):
         try:
             if debug:
                 print("prompt:", prompt)
+            messages = [{"role": "user", "content": prompt}]
             if self.client:
-                messages = [{"role": "user", "content": prompt}]
-                response = self.client.chat.completions.create(model=model, messages=messages)
+                response = self.client.chat.completions.create(model=model, messages=messages, tools=tools)
             else:
-                response = openai.ChatCompletion.create(
-                    model=model,
-                    messages=[{"role": "user", "content": prompt}],
-                )
-            resp = response.choices[0].message.content.strip()
+                response = openai.ChatCompletion.create(model=model, messages=messages, tools=tools)
+            # DeepSeek的响应结构与OpenAI存在差异，需要特殊处理
+            # tool_call = response['choices'][0]['message']['tool_calls'][0]
+            # resp = tool_call['function']['arguments'].strip()
+            resp = response.choices[0].message
             if debug:
                 print("模型回复：", resp)
             return resp
@@ -97,26 +74,22 @@ class DeepSeekChatCompat(IChat):
             else:
                 print(f"API请求失败: {e}")
         except Exception as e:
-            self._handle_openai_error(e)
+            print(f"发生未知错误: {e}")
             return ""
 
-    def get_completion_messages(self, messages, model="deepseek-chat", debug=False):
+    def get_completion_messages(self, messages, model="deepseek-chat", tools=[], debug=False):
         try:
             if debug:
                 formatted_json = json.dumps(messages, indent=4, ensure_ascii=False)
                 print("prompt:", formatted_json)
-
             if self.client:
-                response = self.client.chat.completions.create(model=model, messages=messages)
+                response = self.client.chat.completions.create(model=model, messages=messages, tools=tools)
             else:
-                response = openai.ChatCompletion.create(
-                    model=model,
-                    messages=messages,
-                    temperature=0.5,  # DeepSeek推荐0-1之间的随机性
-                    max_tokens=512,  # 控制生成文本的最大长度
-                )
+                response = openai.ChatCompletion.create(model=model, messages=messages, tools=tools)
 
-            resp = response.choices[0].message.content.strip()
+            # DeepSeek的响应结构与OpenAI存在差异，需要特殊处理
+            resp = response.choices[0].message
+
             if debug:
                 print("模型回复：", resp)
             return resp
@@ -144,6 +117,22 @@ class DeepSeekChatCompat(IChat):
         except APIError as e:
             print(f"API请求失败: {e}")
 
+    def _get_openai_client(self, api_key: str = None, base_url: str = None) -> Union[OpenAI, None]:
+        openai_version = version("openai")
+        # 新版 SDK (≥1.0.0)
+        if tuple(map(int, openai_version.split('.')[:2])) >= (1, 0):
+            from openai import OpenAI
+            return OpenAI(
+                api_key=api_key or self._openai_api_key,
+                base_url=base_url or self._openai_api_beta,
+                timeout=30.0
+            )
+        # 旧版 SDK (<1.0.0)
+        else:
+            openai.api_key = api_key or self._openai_api_key
+            openai.api_base = base_url or self._openai_api_beta
+            return None  # 旧版无需返回客户端实例
+
     """
     统一异常处理
     """
@@ -165,10 +154,50 @@ class DeepSeekChatCompat(IChat):
 
         print(f"OpenAI API Error: {error_info}")
 
+
 # 使用示例
 if __name__ == "__main__":
-    deepseek = DeepSeekChatCompat()
-    prompt = json_prompt_v4()
-    # result = deepseek.get_completion(prompt, debug=True)
-    messages =  [{"role": "user", "content": prompt}]
-    result_v1 = deepseek.get_completion_messages(messages, debug=True)
+    deepseek = DeepSeekFuncCompat()
+
+    functions_sum = [
+        {
+            "type": "function",
+            "function": {  # 用 JSON 描述函数。可以定义多个，但是只有一个会被调用，也可能都不会被调用
+                "name": "sum",
+                "description": "计算数组中所有数字的和",
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "numbers": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            }
+                        }
+                    }
+                },
+            }
+        }
+    ]
+
+    prompt_sum = "桌上有 2 个苹果，四个桃子和 3 本书，一共有几个水果？"
+
+    messages_sum = [
+        {"role": "system", "content": "你是一个小学数学老师，你要教学生加法"},
+        {"role": "user", "content": prompt_sum}
+    ]
+
+    result = deepseek.get_completion_messages(messages_sum, tools=functions_sum, debug=True)
+    content = result.content.strip()
+    if result.tool_calls:
+        tool_call = result.tool_calls[0]
+        id = tool_call.id
+        function_name = tool_call.function.name
+        arguments = tool_call.function.arguments
+        print("id:", id)
+        print("function_name:", function_name)
+        print("arguments:", arguments)
+        print("content:", content)
+        print("result:", eval(arguments)["numbers"])
+    else:
+        print("content:", content)

@@ -1,109 +1,26 @@
-import json
-
-import openai
-import os
-from dotenv import load_dotenv, find_dotenv
-from openai import AuthenticationError
 
 from IChat import IChat
-from nlu_deepseek import *
-
+from deepseek.deepseek_fun_compat import DeepSeekFuncCompat
 
 class DeepSeekFunc(IChat):
     # 初始化DeepSeekChat类
     def __init__(self):
-        self.init_api_key()
-        self.check_api_key()
+        self._deepseek= DeepSeekFuncCompat()
 
     def init_api_key(self):
-        # 加载环境变量
-        load_dotenv(find_dotenv())
-        # 配置DeepSeek API参数
-        openai.api_key = os.getenv('DEEPSEEK_API_KEY')  # 需在.env中配置DEEPSEEK_API_KEY
-        print("DeepSeek API Key:", openai.api_key)
-        openai.api_base = "https://api.deepseek.com/v1"  # DeepSeek的API端点
+        self._deepseek.init_api_key()
 
     def check_api_key(self):
-        try:
-            openai.Model.list()  # 测试API连通性
-            print("API Key 有效")
-        except AuthenticationError as e:
-            print(f"认证失败: {e}")
-        except openai.error.APIError as e:
-            print(f"API错误: {e}")
+        self._deepseek.check_api_key()
 
     def get_completion(self, prompt, model="deepseek-chat", tools=[], debug=False):
-        try:
-            if debug:
-                print("prompt:", prompt)
-            response = openai.ChatCompletion.create(
-                model=model,
-                messages=[{"role": "user", "content": prompt}],
-                temperature=0.5,  # DeepSeek推荐0-1之间的随机性
-                tools=tools
-            )
-            # DeepSeek的响应结构与OpenAI存在差异，需要特殊处理
-            # tool_call = response['choices'][0]['message']['tool_calls'][0]
-            # resp = tool_call['function']['arguments'].strip()
-            resp = response.choices[0].message
-            if debug:
-                print(response)
-                print("模型回复：", resp)
-            return resp
-        except openai.error.APIError as e:
-            if "Insufficient Balance" in str(e):
-                # 发送邮件/短信通知
-                print("DeepSeek账户余额不足，请及时充值")
-            else:
-                print(f"API请求失败: {e}")
-        except Exception as e:
-            print(f"发生未知错误: {e}")
-            return ""
+        return self._deepseek.get_completion(prompt, model, tools, debug)
 
     def get_completion_messages(self, messages, model="deepseek-chat", tools=[], debug=False):
-        try:
-            if debug:
-                formatted_json = json.dumps(messages, indent=4, ensure_ascii=False)
-                print("prompt:", formatted_json)
-            response = openai.ChatCompletion.create(
-                model=model,
-                messages=messages,
-                temperature=0.5,  # DeepSeek推荐0-1之间的随机性
-                tools=tools
-            )
-            # DeepSeek的响应结构与OpenAI存在差异，需要特殊处理
-            resp = response.choices[0].message
-            # tool_call = response['choices'][0]['message']['tool_calls'][0]
-            # resp = tool_call['function']['arguments'].strip()
-
-            if debug:
-                print("模型回复：", resp)
-                print(response)
-            return resp
-        except openai.error.APIError as e:
-            if "Insufficient Balance" in str(e):
-                # 发送邮件/短信通知
-                print("DeepSeek账户余额不足，请及时充值")
-            else:
-                print(f"API请求失败: {e}")
-        except Exception as e:
-            print(f"发生未知错误: {e}")
-            return ""
+        return self._deepseek.get_completion_messages(messages, model, tools, debug)
 
     def moderation(self, text, debug=False):
-        try:
-            if debug:
-                print("prompt:", text)
-            response = openai.Moderation.create(
-                input=text
-            )
-            # DeepSeek的响应结构与OpenAI存在差异，需要特殊处理
-            resp = response.results[0]
-            print("模型回复：", resp)
-            return resp.flagged
-        except openai.error.APIError as e:
-            print(f"API请求失败: {e}")
-
+        self._deepseek.moderation(text, debug)
 
 # 使用示例
 if __name__ == "__main__":
