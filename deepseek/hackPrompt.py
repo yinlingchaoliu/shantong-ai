@@ -1,4 +1,4 @@
-from chat_deepseek import DeepSeekChat
+from deepseek_chat import DeepSeekChat
 chat = DeepSeekChat()
 
 def get_completion(session, user_prompt):

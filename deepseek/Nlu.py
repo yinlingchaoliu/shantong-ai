@@ -1,7 +1,7 @@
 
 import json, copy
 
-from chat_deepseek import DeepSeekChat
+from deepseek_chat import DeepSeekChat
 from nlu_deepseek import *
 
 """

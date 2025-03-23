@@ -1,8 +1,8 @@
 import json
 
-from chat_deepseek import DeepSeekChat
+from deepseek_chat import DeepSeekChat
 from deepseek.Switch import Switch
-from func_deepseek import DeepSeekFunc
+from deepseek_fun import DeepSeekFunc
 
 """
 计算器

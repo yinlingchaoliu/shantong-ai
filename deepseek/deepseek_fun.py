@@ -3,7 +3,7 @@ import json
 import openai
 import os
 from dotenv import load_dotenv, find_dotenv
-from openai.error import AuthenticationError
+from openai import AuthenticationError
 
 from IChat import IChat
 from nlu_deepseek import *

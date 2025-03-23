@@ -6,8 +6,8 @@ function calling 演示调用
 """
 import json
 
-from chat_deepseek import DeepSeekChat
-from func_deepseek import DeepSeekFunc
+from deepseek_chat import DeepSeekChat
+from deepseek_fun import DeepSeekFunc
 
 """
  模拟接口调用

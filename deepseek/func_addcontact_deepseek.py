@@ -1,8 +1,8 @@
 import json
 
-from chat_deepseek import DeepSeekChat
+from deepseek_chat import DeepSeekChat
 from sqlite_company import init_database
-from func_deepseek import DeepSeekFunc
+from deepseek_fun import DeepSeekFunc
 
 """
 用户界面
