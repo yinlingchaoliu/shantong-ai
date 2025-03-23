@@ -9,7 +9,10 @@ from openai.error import AuthenticationError
 from IChat import IChat
 from nlu_deepseek import *
 
-class DeepSeekChat(IChat):
+"""
+openai 低版本的api < 0.1.0
+"""
+class DeepSeekChatV1(IChat):
     # 初始化DeepSeekChat类
     def __init__(self):
         self.init_api_key()
@@ -99,7 +102,7 @@ class DeepSeekChat(IChat):
 
 # 使用示例
 if __name__ == "__main__":
-    deepseek = DeepSeekChat()
+    deepseek = DeepSeekChatV1()
     prompt = json_prompt_v4()
     print(prompt)
     result = deepseek.get_completion(prompt)
