@@ -1,4 +1,4 @@
-ollama>=0.1.2  # 官方 Python 客户端
+ollama>=0.1.2
 openai~=1.68.2
 python-dotenv~=1.0.1
 requests~=2.32.3
@@ -29,3 +29,4 @@ transformers~=4.49.0
 peft~=0.14.0
 python-dateutil~=2.9.0post0
 langchain-community~=0.3.19
+pypdf>=5.4.0
