@@ -12,3 +12,4 @@
 .gradle/*
 .idea/*
 */__pycache__/*
+/myenv3.12

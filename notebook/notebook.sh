@@ -1,3 +1,3 @@
 
-# pip notebook
+# pip install notebook
 jupyter notebook
