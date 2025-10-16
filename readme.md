@@ -45,3 +45,19 @@ git lfs migrate import --include="*.pth" --everything
 git lfs migrate import --include="notebook/data/checkpoint.pth" --everything
 git push --set-upstream origin main --force-with-lease
 ```
+
+# 支持相对路径
+
+setup.py
+```python
+from setuptools import setup, find_packages
+
+setup(
+    name="my_project",
+    packages=find_packages(),
+)
+```
+
+```shell
+pip install -e .
+```
