@@ -13,3 +13,4 @@
 .idea/*
 */__pycache__/*
 /myenv3.12
+/notebook/course

@@ -3,10 +3,8 @@
 """
 模型使用示例
 """
-import models
-# 导入models模块
-from models.model_manager import ModelManager
 
+from models.model_manager import ModelManager
 
 def example_basic_usage():
     """
@@ -23,15 +21,6 @@ def example_basic_usage():
     # 获取可用模型列表
     available_models = manager.get_available_models()
     print(f"可用模型: {available_models}")
-    
-    # # 使用当前模型生成文本
-    # try:
-    #     prompt = "请简单介绍一下人工智能的应用领域"
-    #     response = manager.generate(prompt, temperature=0.7, max_tokens=500)
-    #     print(f"\n当前模型响应:")
-    #     print(response)
-    # except Exception as e:
-    #     print(f"生成失败: {str(e)}")
 
 def example_chat_usage():
     """
@@ -119,9 +108,8 @@ def example_custom_model_params():
         print(f"生成失败: {str(e)}")
 
 if __name__ == "__main__":
-
-    
-
+    # 导入models模块
+    import models
     # 创建模型管理器
     manager = ModelManager()
     
@@ -132,8 +120,6 @@ if __name__ == "__main__":
     available_models = manager.get_available_models()
     print(f"可用模型: {available_models}")
 
-    # manager.set_current_model('ollama')
-    # manager.set_current_model('deepseek')
             # 使用高创造性参数
     prompt = "写一首短诗，关于人工智能"
     print("\n高创造性参数(temperature=0.9):")

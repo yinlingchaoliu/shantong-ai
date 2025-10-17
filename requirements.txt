@@ -30,3 +30,21 @@ peft~=0.14.0
 python-dateutil~=2.9.0post0
 langchain-community~=0.3.19
 pypdf>=5.4.0
+
+# 文档处理
+PyPDF2==3.0.1
+python-docx==1.1.0
+
+# 网络请求和网页处理
+beautifulsoup4==4.12.3
+lxml==5.1.0
+
+# 文本处理
+tiktoken
+
+# 可选依赖（用于GPU加速）
+faiss-cpu==1.8.0
+
+# 模型访问相关
+httpx==0.25.2
+websockets==12.0
