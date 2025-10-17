@@ -1,6 +1,6 @@
 
 from IChat import IChat
-from deepseek.deepseek_fun_compat import DeepSeekFuncCompat
+from demo.deepseek.deepseek_fun_compat import DeepSeekFuncCompat
 
 class DeepSeekFunc(IChat):
     # 初始化DeepSeekChat类

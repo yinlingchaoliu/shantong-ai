@@ -1,1 +1,5 @@
+document_loaders
+embedding
 models
+rag
+vector_stores

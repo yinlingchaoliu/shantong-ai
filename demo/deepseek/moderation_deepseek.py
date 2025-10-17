@@ -7,7 +7,7 @@ import json
 from dotenv import load_dotenv, find_dotenv
 from openai.error import AuthenticationError
 
-from deepseek.IModeration import IModeration
+from demo.deepseek.IModeration import IModeration
 
 """
 deepseek 内容审查接口 等官方人员通知

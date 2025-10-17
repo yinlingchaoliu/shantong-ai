@@ -1,7 +1,7 @@
 import json
 
 from deepseek_chat import DeepSeekChat
-from deepseek.Switch import Switch
+from demo.deepseek.Switch import Switch
 from deepseek_fun import DeepSeekFunc
 
 """
