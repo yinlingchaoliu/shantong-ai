@@ -9,7 +9,7 @@ pyinstaller -F main.py
 ```shell
 python -m venv myenv 
 source myenv/bin/activate
- 
+
 pyenv install 3.8.5  # 安装特定版本的Python
 pyenv global 3.8.5  # 设置全局Python版本为3.8.5
 pyenv local 3.8.5  # 在当前目录设置Python版本为3.8.5
@@ -24,6 +24,32 @@ conda activate myenv3.12
 conda env export > environment.yml
 ```
 
+# conda降级3.12
+```shell
+#备份base
+conda create --name base_bak --clone base 
+conda env export > environment.yml
+
+conda activate base
+conda install python=3.12.9
+
+```
+
+# 自动激活conda环境
+```shell
+# 假设你的环境名为 "my_project_env"
+echo "my_project_env" > .conda-env
+```
+
+ ~/.zshrc 或 ~/.bashrc
+```shell
+# 自动激活 .conda-env 文件中指定的conda环境
+FILE=./.conda-env
+if [[ -f "$FILE" ]]; then
+    CONDA_ENV=$(<$FILE)
+    conda activate $CONDA_ENV
+fi
+```
 
 # 安装依赖
 ```shell

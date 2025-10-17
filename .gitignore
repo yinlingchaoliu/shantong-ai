@@ -14,3 +14,5 @@
 */__pycache__/*
 /myenv3.12
 /notebook/course
+/db/vector_store
+/db
